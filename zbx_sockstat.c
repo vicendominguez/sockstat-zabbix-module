@@ -34,6 +34,8 @@ static ZBX_METRIC keys[] =
  * sockstat_info functions  *
  ****************************/
 
+/* This is the real paser */
+
 char *get_word_sockstat(FILE * fd) {
   char c;
   int buffer_length = 0;
@@ -54,6 +56,7 @@ char *get_word_sockstat(FILE * fd) {
 }
 
 
+/* Matrix Init */
 
 static char** allocate_matrix(int nrows, int ncols)
 {
@@ -176,10 +179,10 @@ int    zbx_module_sockstat_info(AGENT_REQUEST *request, AGENT_RESULT *result)
 
         /* -----------------------------------
        	**** Current format 2.6.32-431.3.1.el6.x86_64 Centos 6.5 ***
-
-       	sockets: used 290
-	              (0)
-       	TCP: inuse 117 orphan 3 tw 669 alloc 121 mem 132
+ 
+        sockets: used 290
+                      (0)
+        TCP: inuse 117 orphan 3 tw 669 alloc 121 mem 132
                    (1)       (2)   (3)       (4)     (5)
         UDP: inuse  4   mem   1
                    (6)       (7)
@@ -188,8 +191,8 @@ int    zbx_module_sockstat_info(AGENT_REQUEST *request, AGENT_RESULT *result)
         RAW: inuse  0
                    (9)
         FRAG: inuse   0  memory  0
-	            (10)       (11)
-        ----------------------------------------        */
+                    (10)       (11)
+        ----------------------------------------     */
 
     i_out = atoi (p_sockstat[0]);
     for (j=0;j<=N_COMMANDS;j++){
