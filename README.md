@@ -17,13 +17,13 @@ Install
 
 You need to download the Zabbix 2.2.x source and:
 
-'''
+```
 cd <source_zabbix>
 ./configure
 make
 
 cd <source_zabbix>/src/modules/ 
-'''
+```
 
 and you should create a new directory with this git repo content. After that, inside of the new module directory, a `make` is enough.
 
@@ -35,14 +35,14 @@ Usage
 
 CentOS 6.4: `cd /etc/zabbix/zabbix_agentd.conf`
 
-'''
+```
 LoadModulePath=/etc/zabbix/modules
 LoadModule=zbx_sockstat.so
-'''
+```
 
 At the moment i only have implemented 5 keys:
 
-'''
+```
 [root@build zbx_sockstat]# zabbix_agentd -t sockstat.info[total]
 sockstat.info[total]                          [u|991]
 [root@build zbx_sockstat]# zabbix_agentd -t sockstat.info[tcp]
@@ -53,9 +53,10 @@ sockstat.info[orphan]                         [u|0]
 sockstat.info[timewait]                       [u|135]
 [root@build zbx_sockstat]# zabbix_agentd -t sockstat.info[allocated]
 sockstat.info[allocated]                      [u|64]
-'''
+```
+I got the info from here:
 
-'''
+```
 [root@build zbx_sockstat]# cat  /proc/net/sockstat
 sockets: used 991
 TCP: inuse 6 orphan 0 tw 135 alloc 64 mem 3
@@ -63,7 +64,7 @@ UDP: inuse 0 mem 1
 UDPLITE: inuse 0
 RAW: inuse 0
 FRAG: inuse 0 memory 0
-''''
+```
 
 Environment
 -----------
