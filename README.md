@@ -15,6 +15,10 @@ I have created a agent module to parse the /proc/net/sockstat info for Zabbix > 
 Install
 -------
 
+From **CentOS**: `yum install <url_to_rpm>` just that.
+
+From **source**:
+
 You need to download the Zabbix 2.2.x source and:
 
 ```
@@ -27,13 +31,16 @@ cd <source_zabbix>/src/modules/
 
 and you should create a new directory with this git repo content. After that, inside of the new module directory, a `make` is enough.
 
+**Other**: There is a compiled version too. Copy wherever you want.
 
-There is a compiled version too.
 
-Usage
------
+Configure
+---------
 
-CentOS 6.4: `cd /etc/zabbix/zabbix_agentd.conf`
+*CentOS RPM*: Nothing. RPM does it.
+
+
+*No CentOS:* `cd /etc/zabbix/zabbix_agentd.conf`
 
 ```
 LoadModulePath=/etc/zabbix/modules
@@ -69,7 +76,7 @@ FRAG: inuse 0 memory 0
 Zabbix 2.2.x template
 ---------------------
 
-Include a xml file (zabbix_template/) to import in Zabbix server with:
+There is a xml file (zabbix_template/) to import in Zabbix server with:
 
 * 5 items
 * 1 graph
