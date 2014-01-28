@@ -66,6 +66,19 @@ RAW: inuse 0
 FRAG: inuse 0 memory 0
 ```
 
+Zabbix 2.2.x template
+---------------------
+
+Include a xml file (zabbix_template/) to import in Zabbix server with:
+
+* 5 items
+* 1 graph
+
+Screenshots
+-----------
+![Screenshot](img/zabbix-sockstat.png)
+
+
 Environment
 -----------
 
@@ -79,5 +92,3 @@ Notes
 -----
 
 I am not a developer. I am a sysadmin. Sorry for my bad programming practices etc etc ......
-
-
