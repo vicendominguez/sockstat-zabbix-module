@@ -10,7 +10,9 @@ A loadable module is basically a shared library used by Zabbix server or agent a
 
 Loadable modules have a number of benefits. Great performance and ability to implement any logic are very important, but perhaps the most important advantage is the ability to develop, use and share Zabbix modules. It contributes to trouble-free maintenance and helps to deliver new functionality easier and independently of the Zabbix core code base.
 
-I have created a agent module to parse the /proc/net/sockstat info for Zabbix > 2.2.x
+I have created a agent module to parse the */proc/net/sockstat* info for Zabbix > 2.2.x
+You will be able to watch the *orphan* sockets or the *timewait* sockets. They are interesting for: DDOS detection, leaks in webapps services etc etc...
+
 
 Install
 -------
@@ -31,23 +33,23 @@ cd <source_zabbix>/src/modules/
 
 and you should create a new directory with this git repo content. After that, inside of the new module directory, a `make` is enough.
 
-**Other**: There is a compiled version too. Copy wherever you want.
+**Other**: There is a compiled version too. Copy it wherever you want.
 
 
 Configure
 ---------
 
-*CentOS RPM*: Nothing. RPM does it.
+**CentOS RPM:* Nothing. RPM does it.
 
 
-*No CentOS:* `cd /etc/zabbix/zabbix_agentd.conf`
+**No CentOS:** `cd /etc/zabbix/zabbix_agentd.conf`
 
 ```
 LoadModulePath=/etc/zabbix/modules
 LoadModule=zbx_sockstat.so
 ```
 
-At the moment i only have implemented 5 keys:
+At the moment I only have implemented 5 keys:
 
 ```
 [root@build zbx_sockstat]# zabbix_agentd -t sockstat.info[total]
