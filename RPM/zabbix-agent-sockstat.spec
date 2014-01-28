@@ -1,5 +1,5 @@
 Name:       zabbix-agent-sockstat
-Version:    0.99 
+Version:    2.00 
 Release:    1%{?dist}
 Summary:    Agent module for zabbix for network sockets status
 
@@ -43,6 +43,8 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/service zabbix-agent restart >/dev/null 2>&1
 
 %changelog
+* Tue Jan 28 2014 Vicente Dominguez <twitter:@vicendominguez> - 2.00
+- No malloc, random value solved and first production version
+
 * Thu Jan 24 2014 Vicente Dominguez <twitter:@vicendominguez> - 0.99
 - rpm for rhel6 (fast-way) 
-
