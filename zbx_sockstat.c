@@ -31,55 +31,35 @@ static ZBX_METRIC keys[] =
 };
 
 /****************************
- * sockstat_info functions  *
+ * sockstat file parser     *
  ****************************/
 
-char *get_word_sockstat(FILE * fd) {
-  char c;
-  int buffer_length = 0;
-  char *s_buffer = (char *) malloc(sizeof(char) * 10);
+int * get_values_sockstat(FILE * fd) {
+
+  static int    buffer[5];
+  char   line[128];
 
   if (!fd)
 	return NULL;
-  do {
-      	c = fgetc(fd);
-        if (isdigit(c)){
-                s_buffer[buffer_length] = c;
-               	buffer_length++;
+
+  while (NULL != fgets(line, sizeof(line), fd)) {
+
+        if (0 == strncmp(line,"sockets",7)) {
+/*
+                /proc/net/sockstat format: kernel 2.6.32-431.3.1.el6.x86_64 Centos 6.5
+                sockets: used 290
+*/
+                sscanf (line, "%*s used %d", &buffer[0]);
         }
-	if ((isspace(c)) && (buffer_length > 0)) { break; }
-  } while (c != EOF);
-  if (isspace(c)) { return s_buffer; }
-  return NULL;
-}
-
-static char** allocate_matrix(int nrows, int ncols)
-{
-    int i;
-    int x,y;
-    char **matrix;
-
-    /*  allocate array of pointers  */
-    matrix = malloc( nrows*sizeof(char*));
-
-    if(matrix==NULL)
-        return NULL; /* Allocation failed */
-
-    /*  Allocate column for each name  */
-    for(i = 0; i < nrows; i++)
-        matrix[i] = malloc( ncols*sizeof(char));
-
-    if(matrix[i-1] == NULL)
-        return NULL; /* Allocation failed */
-
-    /* to null */
-    for (x=0;x < nrows; x++) {
-        for (y=0; y < ncols; y++) {
-                matrix[x][y]='\0';
+	if (0 == strncmp(line,"TCP",3)){
+/*
+                /proc/net/sockstat format: kernel 2.6.32-431.3.1.el6.x86_64 Centos 6.5
+                 TCP: inuse 117 orphan 3 tw 669 alloc 121 mem 132
+*/
+                 sscanf(line,"%*s inuse %d orphan %d tw %d alloc %d",&buffer[1],&buffer[2],&buffer[3],&buffer[4]);
         }
-    }
-
-    return matrix;
+  }
+  return buffer;
 }
 
 /******************************************************************************
@@ -142,10 +122,8 @@ int    zbx_module_sockstat_info(AGENT_REQUEST *request, AGENT_RESULT *result)
 
     char    P_PROC_SOCKSTAT[] = "/proc/net/sockstat";
     static  FILE *f_sockstat;
-    char    *rdata;
-    char    **p_sockstat;
+    int    *p_sockstat;
 
-    int	    i = 0;
     int     j;	
     int     i_out;
 
@@ -169,44 +147,18 @@ int    zbx_module_sockstat_info(AGENT_REQUEST *request, AGENT_RESULT *result)
 	return SYSINFO_RET_FAIL;
     }
 
+    p_sockstat = get_values_sockstat(f_sockstat);
 
-    /* sockstat file  size */
-    p_sockstat = allocate_matrix(30, 20);
-
-    /* store values in 2D array */
-    while ((rdata = get_word_sockstat(f_sockstat)) != NULL ) {
-         p_sockstat[i] = rdata;
-         i++;
-         rdata = '\0';
-    }
-
-        /* -----------------------------------
-        **** Current format 2.6.32-431.3.1.el6.x86_64 Centos 6.5 ***
-        sockets: used 290
-	              (0)
-        TCP: inuse 117 orphan 3 tw 669 alloc 121 mem 132
-                   (1)       (2)   (3)       (4)     (5)
-        UDP: inuse  4   mem   1
-                   (6)       (7)
-        UDPLITE: inuse  0
-                       (8)
-        RAW: inuse  0
-                   (9)
-        FRAG: inuse   0  memory  0
-                     (10)       (11)
-        ----------------------------------------        */
-
-    i_out = atoi (p_sockstat[0]);
+    i_out = p_sockstat[0];
     for (j=0;j<=N_COMMANDS;j++){
 	if (!strcmp(s_commands[j],param)) { 
-		i_out = atoi(p_sockstat[j]); 
+		i_out = p_sockstat[j]; 
 		break;
 	}
     }
 
-    SET_UI64_RESULT(result, i_out);
     fclose (f_sockstat);
-    free (p_sockstat);
+    SET_UI64_RESULT(result, i_out);
     return SYSINFO_RET_OK;
 }
 
