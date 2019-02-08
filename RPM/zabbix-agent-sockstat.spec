@@ -1,5 +1,5 @@
-%define     main_version  3.4
-%define     minor_version 15
+%define     main_version  4.0
+%define     minor_version 4
 %define     module_dir    src/modules
 
 Name:       zabbix-agent-sockstat
@@ -12,7 +12,7 @@ License:    GPLv2+
 Source1:    zbx_sockstat.c
 Source2:    Makefile
 
-Requires:   zabbix-agent >= 3.2.0, zabbix-agent < 4.0.0
+Requires:   zabbix-agent >= 4.0.0, zabbix-agent < 4.1.0
 
 %if 0%{?rhel} >= 7
 BuildRequires:   systemd
